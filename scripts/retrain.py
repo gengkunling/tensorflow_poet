@@ -148,7 +148,7 @@ def create_image_lists(image_dir, testing_percentage, validation_percentage):
     if is_root_dir:
       is_root_dir = False
       continue
-    extensions = ['jpg', 'jpeg', 'JPG', 'JPEG']
+    extensions = ['jpg', 'jpeg', 'JPG', 'JPEG', 'png', 'PNG']
     file_list = []
     dir_name = os.path.basename(sub_dir)
     if dir_name == image_dir:
@@ -786,8 +786,9 @@ def add_final_training_ops(class_count, final_tensor_name, bottleneck_tensor,
   tf.summary.histogram('activations', final_tensor)
 
   with tf.name_scope('cross_entropy'):
-    cross_entropy = tf.nn.softmax_cross_entropy_with_logits(
-        labels=ground_truth_input, logits=logits)
+    #cross_entropy = tf.nn.softmax_cross_entropy_with_logits(
+    #    labels=ground_truth_input, logits=logits)
+    cross_entropy = tf.nn.weighted_cross_entropy_with_logits(targets=ground_truth_input, logits=logits, pos_weight=4)
     with tf.name_scope('total'):
       cross_entropy_mean = tf.reduce_mean(cross_entropy)
   tf.summary.scalar('cross_entropy', cross_entropy_mean)
